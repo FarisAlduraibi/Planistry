@@ -1,4 +1,4 @@
-# gr
+# Planistry
 
 A new Flutter project.
 
