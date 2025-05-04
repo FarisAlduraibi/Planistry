@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/schedule_item.dart';
 import '../utils/constants.dart';
 import 'course_detail_screen.dart';
@@ -49,6 +50,22 @@ class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
   @override
+
+  String _username = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUsername();
+  }
+
+  void _loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _username = prefs.getString('username') ?? '';
+    });
+  }
+
   Widget build(BuildContext context) {
     // Group items by date
     Map<String, List<ScheduleItem>> groupedItems = {};
@@ -82,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         children: [
                           Text(
-                            'Hi Faris ',
+                            'Hi $_username',
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Icon(Icons.waving_hand, color: Colors.amber),

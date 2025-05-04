@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gr/screens/StudyTimeScreen.dart';
-
+import 'package:gr/screens/LoginScreen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../utils/constants.dart';
 
 
@@ -116,8 +117,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             iconColor: Colors.red,
             title: 'Logout',
             textColor: Colors.red,
-            onTap: () {
-              // Handle logout
+            onTap: () async {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.clear(); // remove access_token, refresh_token, username, etc.
+
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => LoginScreen()),
+                    (route) => false,
+              );
             },
           ),
         ],
