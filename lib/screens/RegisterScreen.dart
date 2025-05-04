@@ -1,5 +1,6 @@
   // RegisterScreen.dart
   import 'package:flutter/material.dart';
+import 'package:gr/Services/api_service.dart';
   import '../utils/constants.dart';
   import 'LoginScreen.dart';
   import '../NavigationHandler.dart';
@@ -116,13 +117,39 @@
         bottomNavigationBar: Padding(
           padding: const EdgeInsets.all(24.0),
           child: OutlinedButton(
-            onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => NavigationHandler()),
-                    (route) => false,
+            onPressed: () async {
+              final name = _nameController.text.trim();
+              final email = _emailController.text.trim();
+              final password = _passwordController.text;
+              final confirmPassword = _confirmPasswordController.text;
+
+              if (password != confirmPassword) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Passwords do not match")),
+                );
+                return;
+              }
+
+              final response = await ApiService.registerUser(
+                email: email,
+                username: name, // We're using the name as the username
+                password: password,
+                confirmPassword: confirmPassword,
               );
+
+              if (response['success']) {
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => NavigationHandler()),
+                      (route) => false,
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Error: ${response['message']}")),
+                );
+              }
             },
+
             child: Text(
               'Sign Up',
               style: TextStyle(

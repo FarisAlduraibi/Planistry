@@ -1,9 +1,13 @@
 
 // LoginScreen.dart
 import 'package:flutter/material.dart';
+import 'package:gr/Services/api_service.dart';
 import '../utils/constants.dart';
 import 'RegisterScreen.dart';
 import '../NavigationHandler.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -143,12 +147,22 @@ class _LoginScreenState extends State<LoginScreen> {
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(24.0),
         child: OutlinedButton(
-          onPressed: () {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => NavigationHandler()),
-                  (route) => false,
+          onPressed: () async {
+            final result = await ApiService.loginUser(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
             );
+            print(result);
+            if (result['success']) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => NavigationHandler()),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(result['message'] ?? 'Login failed')),
+              );
+            }
           },
           child: Text(
             'Log in',
