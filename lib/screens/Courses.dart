@@ -1,79 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:gr/Services/api_service.dart';
+import '../models/course.dart';
 
 class CoursesPage extends StatelessWidget {
-  final List<Course> courses = [
-    Course(code: 'CS 432', name: 'Artificial Intelligence'),
-    Course(code: 'MATH 218', name: 'Differential Equations'),
-  ];
-
-  CoursesPage({Key? key}) : super(key: key);
+  const CoursesPage({super.key}); // Fix warning for constructor
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Courses',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                  ),
-                  Text(
-                    'You have ${courses.length} Courses',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const Divider(height: 1),
-            Expanded(
-              child: ListView.builder(
-                itemCount: courses.length,
-                itemBuilder: (context, index) {
-                  return CourseCard(course: courses[index]);
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: () {
-                    // Implement add course functionality
-                  },
-                  icon: const Icon(Icons.add),
-                  label: const Text('Add Course'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue[100],
-                    foregroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+        child: FutureBuilder<List<Course>>(
+          future: ApiService.getCourses(), // Your async method
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            }
+
+            final courses = snapshot.data ?? [];
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Courses',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      Text(
+                        'You have ${courses.length} courses',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ),
-
-          ],
+                const Divider(height: 1),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: courses.length,
+                    itemBuilder: (context, index) {
+                      return CourseCard(course: courses[index]);
+                    },
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
   }
 }
+
 
 class CourseCard extends StatelessWidget {
   final Course course;
@@ -101,22 +91,16 @@ class CourseCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              course.code,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.blue,
-              ),
-            ),
+            Text(course.name, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 4),
-            Text(
-              course.name,
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
+            Text(course.description, style: TextStyle(color: Colors.grey[600])),
+            const SizedBox(height: 8),
+            Text('Chapters: ${course.chapters}, Quizzes: ${course.quizzes}, Assignments: ${course.assignments}'),
+            if (course.files.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 4.0),
+                child: Text('Files: ${course.files.length}'),
               ),
-            ),
           ],
         ),
       ),
@@ -124,9 +108,3 @@ class CourseCard extends StatelessWidget {
   }
 }
 
-class Course {
-  final String code;
-  final String name;
-
-  Course({required this.code, required this.name});
-}

@@ -118,34 +118,24 @@ import 'package:gr/Services/api_service.dart';
           padding: const EdgeInsets.all(24.0),
           child: OutlinedButton(
             onPressed: () async {
-              final name = _nameController.text.trim();
-              final email = _emailController.text.trim();
-              final password = _passwordController.text;
-              final confirmPassword = _confirmPasswordController.text;
-
-              if (password != confirmPassword) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Passwords do not match")),
-                );
-                return;
-              }
-
-              final response = await ApiService.registerUser(
-                email: email,
-                username: name, // We're using the name as the username
-                password: password,
-                confirmPassword: confirmPassword,
+              final result = await ApiService.registerUser(
+                email: _emailController.text.trim(),
+                username: _nameController.text.trim(),
+                password: _passwordController.text.trim(),
+                confirmPassword: _confirmPasswordController.text.trim(),
               );
 
-              if (response['success']) {
-                Navigator.pushAndRemoveUntil(
+              if (result['success']) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Registration successful! Please log in.')),
+                );
+                Navigator.pushReplacement(
                   context,
-                  MaterialPageRoute(builder: (context) => NavigationHandler()),
-                      (route) => false,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
                 );
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("Error: ${response['message']}")),
+                  SnackBar(content: Text(result['message'] ?? 'Registration failed')),
                 );
               }
             },
