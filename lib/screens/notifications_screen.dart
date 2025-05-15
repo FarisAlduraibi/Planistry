@@ -23,125 +23,137 @@ class NotificationsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the current theme's brightness and colors
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    final textColor = Theme.of(context).textTheme.displayMedium!.color!;
+    final secondaryTextColor = Theme.of(context).textTheme.bodyMedium!.color!;
+
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.blue),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Column(
+      backgroundColor: backgroundColor,
+      body: SafeArea(
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Notifications',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            Text(
-              'Keep in touch everything',
-              style: TextStyle(
-                fontSize: 14,
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
-        ),
-      ),
-      body: notifications.isNotEmpty
-          ? Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16, top: 8),
-            child: Text(
-              'Today',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
-            ),
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: notifications.length,
-              itemBuilder: (context, index) {
-                final notification = notifications[index];
-                return Container(
-                  margin: EdgeInsets.symmetric(vertical: 4),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.grey[300],
-                      radius: 16,
-                    ),
-                    title: RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: "${notification['course']} ",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          TextSpan(
-                            text: notification['activity'],
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    trailing: Text(
-                      notification['timeRange'],
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                      ),
+            // Header section styled like courses page
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Notifications',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
                     ),
                   ),
-                );
-              },
+                  Text(
+                    'Keep in touch with everything',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: secondaryTextColor,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      )
-          : Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              child: Center(
-                child: Image.asset(
-                  'assets/images/Notification.png',
-                  width: 200,
-                  height: 200,
-                  fit: BoxFit.contain,
+
+            // Today header
+            Padding(
+              padding: const EdgeInsets.only(left: 16, top: 8),
+              child: Text(
+                'Today',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: secondaryTextColor,
                 ),
               ),
             ),
-            SizedBox(height: 20),
-            Text(
-              'No notification yet!',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF007FFF),
+
+            // Notifications content
+            notifications.isNotEmpty
+                ? Expanded(
+              child: ListView.builder(
+                itemCount: notifications.length,
+                itemBuilder: (context, index) {
+                  final notification = notifications[index];
+                  return Container(
+                    margin: EdgeInsets.symmetric(vertical: 4),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: isDark ? Colors.grey[800] : Colors.grey[300],
+                        radius: 16,
+                      ),
+                      title: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: "${notification['course']} ",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            TextSpan(
+                              text: notification['activity'],
+                              style: TextStyle(
+                                color: textColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      trailing: Text(
+                        notification['timeRange'],
+                        style: TextStyle(
+                          color: secondaryTextColor,
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Any notification will appear here',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
+            )
+                : Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 80,
+                      height: 80,
+                      child: Center(
+                        child: isDark
+                            ? Icon(Icons.notifications_off, size: 64, color: Colors.grey[600])
+                            : Image.asset(
+                          'assets/images/Notification.png',
+                          width: 200,
+                          height: 200,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'No notification yet!',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF007FFF),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Text(
+                      'Any notification will appear here',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: secondaryTextColor,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

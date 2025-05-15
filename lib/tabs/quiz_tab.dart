@@ -25,6 +25,11 @@ class QuizTab extends StatelessWidget {
   Widget build(BuildContext context) {
     bool hasQuizzes = quizzes.isNotEmpty;
 
+    // Get current theme brightness
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? (isDark ? Colors.white : AppColors.textPrimary);
+    final primaryColor = Theme.of(context).primaryColor;
+
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: hasQuizzes
@@ -46,7 +51,7 @@ class QuizTab extends StatelessWidget {
                       quiz['title'],
                       style: TextStyle(
                         fontSize: 16,
-                        color: AppColors.textPrimary,
+                        color: textColor,
                       ),
                     ),
                     Row(
@@ -54,7 +59,7 @@ class QuizTab extends StatelessWidget {
                         Text(
                           quiz['score'],
                           style: TextStyle(
-                            color: quiz['hasResult'] ? Colors.blue : Colors.red,
+                            color: quiz['hasResult'] ? primaryColor : Colors.red,
                           ),
                         ),
                         if (quiz['hasResult'])
@@ -65,7 +70,7 @@ class QuizTab extends StatelessWidget {
                             child: Text(
                               'Show Results',
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: primaryColor,
                                 fontSize: 12,
                               ),
                             ),
@@ -88,7 +93,7 @@ class QuizTab extends StatelessWidget {
               },
               child: Text('Generate Quiz'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
                 minimumSize: Size(200, 48),
                 shape: RoundedRectangleBorder(
@@ -120,7 +125,7 @@ class QuizTab extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
+              color: isDark ? Colors.white70 : AppColors.textSecondary,
             ),
           ),
           SizedBox(height: 32),
@@ -133,7 +138,7 @@ class QuizTab extends StatelessWidget {
             },
             child: Text('Generate Quiz'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
+              backgroundColor: primaryColor,
               foregroundColor: Colors.white,
               minimumSize: Size(200, 48),
               shape: RoundedRectangleBorder(

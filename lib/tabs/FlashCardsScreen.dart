@@ -38,13 +38,19 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get the current theme's brightness
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    final textColor = Theme.of(context).textTheme.displayMedium!.color!;
+    final secondaryTextColor = Theme.of(context).textTheme.bodyMedium!.color!;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.blue),
+          icon: Icon(Icons.arrow_back_ios, color: isDark ? Colors.white : Colors.blue),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -55,14 +61,14 @@ class _FlashCardsScreenState extends State<FlashCardsScreen> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue,
+                color: textColor,
               ),
             ),
             Text(
               'Flash cards 01',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey,
+                color: secondaryTextColor,
               ),
             ),
           ],
@@ -167,6 +173,11 @@ class _FlipCardState extends State<FlipCard> with SingleTickerProviderStateMixin
 
   @override
   Widget build(BuildContext context) {
+    // Get current theme brightness
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final cardBackColor = isDark ? Colors.grey[850] : Colors.white;
+    final backTextColor = isDark ? Colors.white70 : widget.flashCard.color;
+
     return GestureDetector(
       onTap: _toggleCard,
       child: Stack(
@@ -183,7 +194,7 @@ class _FlipCardState extends State<FlipCard> with SingleTickerProviderStateMixin
                 alignment: Alignment.center,
                 child: Visibility(
                   visible: !isFrontVisible,
-                  child: _buildCardContent(isBack: true),
+                  child: _buildCardContent(isBack: true, cardBackColor: cardBackColor, backTextColor: backTextColor),
                 ),
               );
             },
@@ -201,7 +212,7 @@ class _FlipCardState extends State<FlipCard> with SingleTickerProviderStateMixin
                 alignment: Alignment.center,
                 child: Visibility(
                   visible: isFrontVisible,
-                  child: _buildCardContent(isBack: false),
+                  child: _buildCardContent(isBack: false, cardBackColor: cardBackColor, backTextColor: backTextColor),
                 ),
               );
             },
@@ -211,11 +222,11 @@ class _FlipCardState extends State<FlipCard> with SingleTickerProviderStateMixin
     );
   }
 
-  Widget _buildCardContent({required bool isBack}) {
+  Widget _buildCardContent({required bool isBack, required Color? cardBackColor, required Color backTextColor}) {
     return Container(
       height: isBack ? 120 : 100,
       decoration: BoxDecoration(
-        color: isBack ? Colors.white : widget.flashCard.color,
+        color: isBack ? cardBackColor : widget.flashCard.color,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
@@ -232,7 +243,7 @@ class _FlipCardState extends State<FlipCard> with SingleTickerProviderStateMixin
           widget.flashCard.back,
           style: TextStyle(
             fontSize: 14,
-            color: Colors.blue,
+            color: backTextColor,
           ),
         ),
       )
@@ -248,7 +259,6 @@ class _FlipCardState extends State<FlipCard> with SingleTickerProviderStateMixin
               ),
             ),
           ),
-
         ],
       ),
     );

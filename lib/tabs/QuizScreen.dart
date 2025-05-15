@@ -12,8 +12,15 @@ class _QuizScreenState extends State<QuizScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get current theme brightness
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).primaryColor;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? (isDark ? Colors.white : AppColors.textPrimary);
+    final secondaryTextColor = Theme.of(context).textTheme.bodyMedium?.color ?? (isDark ? Colors.white70 : AppColors.textSecondary);
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         elevation: 0.5,
         leading: IconButton(
@@ -28,14 +35,14 @@ class _QuizScreenState extends State<QuizScreen> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: textColor,
               ),
             ),
             Text(
               'Quiz 01',
               style: TextStyle(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: secondaryTextColor,
               ),
             ),
           ],
@@ -53,7 +60,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     'Multiple Choice Questions',
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.blue,
+                      color: primaryColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -115,7 +122,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 },
                 child: Text('Submit'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: primaryColor,
                   foregroundColor: Colors.white,
                   padding: EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
@@ -125,13 +132,17 @@ class _QuizScreenState extends State<QuizScreen> {
               ),
             ),
           ),
-          // Bottom navigation bar
         ],
       ),
     );
   }
 
   Widget _buildQuestion(int number, String question, List<String> options) {
+    // Get current theme brightness
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? (isDark ? Colors.white : AppColors.textPrimary);
+    final primaryColor = Theme.of(context).primaryColor;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -140,6 +151,7 @@ class _QuizScreenState extends State<QuizScreen> {
           style: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w500,
+            color: textColor,
           ),
         ),
         SizedBox(height: 8),
@@ -149,7 +161,10 @@ class _QuizScreenState extends State<QuizScreen> {
             String option = options[index];
             String optionLetter = String.fromCharCode(65 + index); // A, B, C, D
             return RadioListTile<String>(
-              title: Text('$optionLetter. $option'),
+              title: Text(
+                '$optionLetter. $option',
+                style: TextStyle(color: textColor),
+              ),
               value: optionLetter,
               groupValue: selectedAnswers[number],
               onChanged: (value) {
@@ -158,7 +173,7 @@ class _QuizScreenState extends State<QuizScreen> {
                 });
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 0),
-              activeColor: Colors.blue,
+              activeColor: primaryColor,
             );
           },
         ),
@@ -170,8 +185,15 @@ class _QuizScreenState extends State<QuizScreen> {
 class QuizResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Get current theme brightness
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).primaryColor;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? (isDark ? Colors.white : AppColors.textPrimary);
+    final secondaryTextColor = Theme.of(context).textTheme.bodyMedium?.color ?? (isDark ? Colors.white70 : AppColors.textSecondary);
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         elevation: 0.5,
         leading: IconButton(
@@ -186,14 +208,14 @@ class QuizResultScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
+                color: textColor,
               ),
             ),
             Text(
               'Quiz 01',
               style: TextStyle(
                 fontSize: 14,
-                color: AppColors.textSecondary,
+                color: secondaryTextColor,
               ),
             ),
           ],
@@ -225,6 +247,7 @@ class QuizResultScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: textColor,
                     ),
                   ),
                   SizedBox(height: 8),
@@ -232,6 +255,7 @@ class QuizResultScreen extends StatelessWidget {
                     'question question question ?',
                     style: TextStyle(
                       fontSize: 16,
+                      color: textColor,
                     ),
                   ),
                   SizedBox(height: 4),
@@ -242,15 +266,16 @@ class QuizResultScreen extends StatelessWidget {
                         '0/1',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: textColor,
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 8),
-                  _buildResultOption('A. choice 1', false, false),
-                  _buildResultOption('A. choice 1', true, false),
-                  _buildResultOption('A. choice 1', false, false),
-                  _buildResultOption('A. choice 1', false, true),
+                  _buildResultOption(context, 'A. choice 1', false, false),
+                  _buildResultOption(context, 'A. choice 1', true, false),
+                  _buildResultOption(context, 'A. choice 1', false, false),
+                  _buildResultOption(context, 'A. choice 1', false, true),
 
                   SizedBox(height: 24),
 
@@ -260,6 +285,7 @@ class QuizResultScreen extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
+                      color: textColor,
                     ),
                   ),
                   SizedBox(height: 8),
@@ -267,6 +293,7 @@ class QuizResultScreen extends StatelessWidget {
                     'question question question ?',
                     style: TextStyle(
                       fontSize: 16,
+                      color: textColor,
                     ),
                   ),
                   SizedBox(height: 4),
@@ -277,27 +304,26 @@ class QuizResultScreen extends StatelessWidget {
                         '1/1',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
+                          color: textColor,
                         ),
                       ),
                     ],
                   ),
                   SizedBox(height: 8),
-                  _buildResultOption('A. choice 1', false, false),
-                  _buildResultOption('A. choice 1', false, false),
-                  _buildResultOption('A. choice 1', false, true),
-                  _buildResultOption('A. choice 1', false, false),
+                  _buildResultOption(context, 'A. choice 1', false, false),
+                  _buildResultOption(context, 'A. choice 1', false, false),
+                  _buildResultOption(context, 'A. choice 1', false, true),
+                  _buildResultOption(context, 'A. choice 1', false, false),
                 ],
               ),
             ),
           ),
-          // Bottom navigation bar
-
         ],
       ),
     );
   }
 
-  Widget _buildResultOption(String text, bool isWrong, bool isCorrect) {
+  Widget _buildResultOption(BuildContext context, String text, bool isWrong, bool isCorrect) {
     Color dotColor = Colors.grey;
     if (isWrong) {
       dotColor = Colors.red;
@@ -305,12 +331,19 @@ class QuizResultScreen extends StatelessWidget {
       dotColor = Colors.green;
     }
 
+    // Get text color based on theme
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color ?? (isDark ? Colors.white : AppColors.textPrimary);
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(text),
+          Text(
+            text,
+            style: TextStyle(color: textColor),
+          ),
           Container(
             width: 16,
             height: 16,

@@ -13,16 +13,20 @@ class AppNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get the current theme brightness
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return BottomNavigationBar(
       currentIndex: selectedIndex,
       onTap: onItemTapped,
       type: BottomNavigationBarType.fixed,
       selectedItemColor: AppColors.primary,
-      unselectedItemColor: Colors.grey,
+      unselectedItemColor: isDark ? Colors.grey[400] : Colors.grey,
       showSelectedLabels: false,
       showUnselectedLabels: false,
-      backgroundColor: Colors.white, // Set the background to white
-      iconSize: 30.0, // Increase the icon size
+      backgroundColor: isDark ? Colors.black : Colors.white, // Apply theme-based background color
+      iconSize: 30.0,
+      elevation: isDark ? 8.0 : 4.0, // Slightly different elevation for dark mode
       items: const [
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
@@ -32,7 +36,6 @@ class AppNavigationBar extends StatelessWidget {
           icon: Icon(Icons.school),
           label: 'Courses',
         ),
-
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications),
           label: 'Notifications',
