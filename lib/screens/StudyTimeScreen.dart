@@ -19,13 +19,20 @@ class _StudyTimeScreenState extends State<StudyTimeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Get current theme information
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    final textColor = Theme.of(context).textTheme.displayMedium!.color!;
+    final secondaryTextColor = Theme.of(context).textTheme.bodyMedium!.color!;
+    final accentColor = Theme.of(context).primaryColor;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.blue),
+          icon: Icon(Icons.arrow_back_ios, color: accentColor),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -36,14 +43,14 @@ class _StudyTimeScreenState extends State<StudyTimeScreen> {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue,
+                color: accentColor,
               ),
             ),
             Text(
               'Set your free time',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey,
+                color: secondaryTextColor,
               ),
             ),
           ],
@@ -59,7 +66,7 @@ class _StudyTimeScreenState extends State<StudyTimeScreen> {
             title: Text(
               day,
               style: TextStyle(
-                color: Colors.blue,
+                color: accentColor,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -69,7 +76,7 @@ class _StudyTimeScreenState extends State<StudyTimeScreen> {
                 isEnabled
                     ? Text(
                   '${_formatTimeOfDay(timeRange.start!)} - ${_formatTimeOfDay(timeRange.end!)}',
-                  style: TextStyle(color: Colors.black87),
+                  style: TextStyle(color: textColor),
                 )
                     : SizedBox(),
                 Switch(
@@ -88,7 +95,7 @@ class _StudyTimeScreenState extends State<StudyTimeScreen> {
                       }
                     });
                   },
-                  activeColor: Colors.blue,
+                  activeColor: accentColor,
                 ),
               ],
             ),
@@ -99,9 +106,10 @@ class _StudyTimeScreenState extends State<StudyTimeScreen> {
                 initialTime: timeRange.start!,
                 builder: (BuildContext context, Widget? child) {
                   return Theme(
-                    data: ThemeData.light().copyWith(
-                      colorScheme: ColorScheme.light(
-                        primary: Colors.blue,
+                    data: Theme.of(context).copyWith(
+                      colorScheme: ColorScheme.fromSeed(
+                        seedColor: accentColor,
+                        brightness: isDark ? Brightness.dark : Brightness.light,
                       ),
                     ),
                     child: child!,
@@ -115,9 +123,10 @@ class _StudyTimeScreenState extends State<StudyTimeScreen> {
                   initialTime: timeRange.end!,
                   builder: (BuildContext context, Widget? child) {
                     return Theme(
-                      data: ThemeData.light().copyWith(
-                        colorScheme: ColorScheme.light(
-                          primary: Colors.blue,
+                      data: Theme.of(context).copyWith(
+                        colorScheme: ColorScheme.fromSeed(
+                          seedColor: accentColor,
+                          brightness: isDark ? Brightness.dark : Brightness.light,
                         ),
                       ),
                       child: child!,

@@ -4,6 +4,12 @@ import '../utils/constants.dart';
 class PlanScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Get the current theme's brightness
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final backgroundColor = Theme.of(context).scaffoldBackgroundColor;
+    final textColor = Theme.of(context).textTheme.displayMedium!.color!;
+    final secondaryTextColor = Theme.of(context).textTheme.bodyMedium!.color!;
+
     // Data for the table
     final List<PlanItem> planItems = [
       PlanItem('1.1\nslides 22 > 30', '19/4/2025\n13:00 - 14:00', 'Linked list'),
@@ -18,12 +24,12 @@ class PlanScreen extends StatelessWidget {
     ];
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: backgroundColor,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: Colors.blue),
+          icon: Icon(Icons.arrow_back_ios, color: isDark ? Colors.white : Colors.blue),
           onPressed: () => Navigator.pop(context),
         ),
         title: Column(
@@ -34,14 +40,14 @@ class PlanScreen extends StatelessWidget {
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
-                color: Colors.blue,
+                color: textColor,
               ),
             ),
             Text(
               'Plan 01',
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.grey,
+                color: secondaryTextColor,
               ),
             ),
           ],
@@ -102,6 +108,8 @@ class PlanScreen extends StatelessWidget {
             child: ListView.builder(
               itemCount: planItems.length,
               itemBuilder: (context, index) {
+                final contentColor = isDark ? Colors.white : Colors.black87;
+
                 return Column(
                   children: [
                     Row(
@@ -114,7 +122,7 @@ class PlanScreen extends StatelessWidget {
                               planItems[index].chapter,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Colors.black87,
+                                color: contentColor,
                               ),
                             ),
                           ),
@@ -127,7 +135,7 @@ class PlanScreen extends StatelessWidget {
                               planItems[index].dateTime,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Colors.black87,
+                                color: contentColor,
                               ),
                             ),
                           ),
@@ -140,7 +148,7 @@ class PlanScreen extends StatelessWidget {
                               planItems[index].content,
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Colors.black87,
+                                color: contentColor,
                               ),
                             ),
                           ),
@@ -149,7 +157,7 @@ class PlanScreen extends StatelessWidget {
                     ),
                     Divider(
                       height: 1,
-                      color: Colors.grey.shade300,
+                      color: isDark ? Colors.grey[700] : Colors.grey[300],
                     ),
                   ],
                 );

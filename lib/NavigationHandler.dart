@@ -9,14 +9,23 @@ import 'screens/notifications_screen.dart';
 import 'screens/settings_screen.dart';
 
 class NavigationHandler extends StatefulWidget {
+  final int initialIndex;
+
+  NavigationHandler({this.initialIndex = 0}); // allow passing an initial tab
+
   @override
   _NavigationHandlerState createState() => _NavigationHandlerState();
 }
 
 class _NavigationHandlerState extends State<NavigationHandler> {
-  int _selectedIndex = 0;
+  late int _selectedIndex;
 
-  // List of screens for the navigation bar
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.initialIndex;
+  }
+
   final List<Widget> _screens = [
     HomeScreen(),
     CoursesPage(),

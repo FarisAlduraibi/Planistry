@@ -1,32 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../core/app_colors.dart';
+import 'package:gr/Services/auth_service..dart';
+
+import '../core/app_colors.dart';
 import 'onboarding_screen.dart';
+import '../NavigationHandler.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  State createState() => _SplashScreenState();
 }
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 3), () {
+    _checkAuthentication();
+  }
+
+  // Check if user is already logged in and redirect accordingly
+  Future<void> _checkAuthentication() async {
+    await Future.delayed(const Duration(seconds: 2)); // Show splash for 2 seconds
+
+    if (!mounted) return;
+
+    // Check if user is logged in
+    final isLoggedIn = await AuthService.isLoggedIn();
+
+    if (isLoggedIn) {
+      // If logged in, go directly to home
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => NavigationHandler()),
+      );
+    } else {
+      // If not logged in, go to onboarding
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const OnboardingScreen()),
       );
-    });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
+      body: AnnotatedRegion(
         value: SystemUiOverlayStyle.light,
         child: SafeArea(
           child: Column(

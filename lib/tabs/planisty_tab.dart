@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gr/tabs/PlanScreen.dart';
 
 import '../utils/constants.dart';
+import '../utils/theme_controller.dart';
 
 class PlanistyTab extends StatelessWidget {
   // Sample data - replace with your actual data source
@@ -16,6 +17,13 @@ class PlanistyTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool hasPlans = plans.isNotEmpty;
+
+    // Get current theme colors based on brightness
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color ??
+        (isDark ? Colors.white : AppColors.textPrimary);
+    final secondaryTextColor = Theme.of(context).textTheme.bodyMedium?.color ??
+        (isDark ? Colors.white70 : AppColors.textSecondary);
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -38,7 +46,7 @@ class PlanistyTab extends StatelessWidget {
                       plan['title'],
                       style: TextStyle(
                         fontSize: 16,
-                        color: AppColors.textPrimary,
+                        color: textColor,
                       ),
                     ),
                     TextButton(
@@ -87,10 +95,10 @@ class PlanistyTab extends StatelessWidget {
             width: 150,
             height: 150,
             errorBuilder: (context, error, stackTrace) {
-              return Image.asset(
-                'assets/images/planistry.png',
-                width: 150,
-                height: 150,
+              return Icon(
+                Icons.calendar_today,
+                size: 150,
+                color: isDark ? Colors.white54 : Colors.grey,
               );
             },
           ),
@@ -100,7 +108,7 @@ class PlanistyTab extends StatelessWidget {
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w500,
-              color: AppColors.textSecondary,
+              color: secondaryTextColor,
             ),
           ),
           SizedBox(height: 32),
@@ -113,7 +121,7 @@ class PlanistyTab extends StatelessWidget {
             },
             child: Text('Generate Plan'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
+              backgroundColor: Theme.of(context).primaryColor,
               foregroundColor: Colors.white,
               minimumSize: Size(200, 48),
               shape: RoundedRectangleBorder(
